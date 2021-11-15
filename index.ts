@@ -8,7 +8,7 @@ const main = async () => {
 
     //relacion debil
     // ProyectoModel.create ({
-    //     nombre: 'Proyecto 3',
+    //     nombre: 'Proyecto 1',
     //     presupuesto: 120,
     //     fechaInicio: Date.now(), //fecha actual
     //     fechaFin: new Date("2022/2/10"), //año-mes-dia
@@ -20,13 +20,17 @@ const main = async () => {
     // .catch((e) =>{
     //     console.error('Error creando el Proyecto', e);
     //     });
+    
+    //QUERY func populate 
+    const proyecto = await ProyectoModel.find({ nombre: 'Proyecto 1'  }).populate('lider');    
+        console.log('el proyecto es: ', proyecto);
 
     // referencia debil querys
-    const proyecto = await ProyectoModel.find({ nombre: 'Proyecto 3' }); //modelo base
-        console.log('el proyecto es :', proyecto, proyecto[0].lider); 
+    // const proyecto = await ProyectoModel.find({ nombre: 'Proyecto 3' }); //modelo base
+    //     console.log('el proyecto es :', proyecto, proyecto[0].lider); 
     
-    const lider = await UserModel.find ({ _id: proyecto[0].lider }) //campo
-        console.log( 'el lider del proyecto es: ', lider);
+    // const lider = await UserModel.find ({ _id: proyecto[0].lider }) //campo
+    //     console.log( 'el lider del proyecto es: ', lider);
 
     //CREAR USUARIO
     // UserModel.create({
