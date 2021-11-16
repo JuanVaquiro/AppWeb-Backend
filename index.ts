@@ -1,11 +1,63 @@
 import conectarDB from "./db/db";
 import { UserModel } from './models/user';
-import { Enum_Rol, Enum_TipoObjetivo } from "./models/enums";
+import { Enum_EstadoUsuario, Enum_Rol, Enum_TipoObjetivo } from "./models/enums";
 import { ProyectoModel } from "./models/project";
 import { ObjectiveModel } from "./models/objective";
 
+const CrearProyectoConObjetivos = async () => {
+    const usuarioInicial = await UserModel.create({
+        nombre:"Juan",
+        apellido: "Vaquiro",
+        correo: "juan@gmail.com",
+        identificacion: "12111",
+        rol: Enum_Rol.administrador,
+        estado: Enum_EstadoUsuario.autorizado,
+    });
+
+    const proyectoCreado = await ProyectoModel.create({
+        nombre: "proyecto Mision Tic",
+        fechaInicio: new Date('2021/12/24'),
+        fechaFin: new Date('2022/12/24'),
+        presupuesto: 120000,
+        lider: usuarioInicial.id,
+    });
+
+    const objetivoGeneral = await ObjectiveModel.create({
+        descripcion:"este el el objetivo general",
+        tipo: Enum_TipoObjetivo.general,
+        proyecto: proyectoCreado._id,
+    });
+
+    const objetivoSpecifico1 = await ObjectiveModel.create({
+        descripcion:"este el el objetivo especifico 1",
+        tipo: Enum_TipoObjetivo.especifico,
+        proyecto: proyectoCreado._id,
+    });
+
+    const objetivoSpecifico2 = await ObjectiveModel.create({
+        descripcion:"este el el objetivo especifico 2",
+        tipo: Enum_TipoObjetivo,
+        proyecto: proyectoCreado._id,
+    });
+
+    console.log ('proyecto creado', proyectoCreado);
+    
+};
+
 const main = async () => {
     await conectarDB ();
+
+    const proyecto = await ProyectoModel.findOne({_id:"6193bb6995386181efe41bda"});
+        console.log("el proyecto que econtrado es ", proyecto);
+
+    const objetivos = await ObjectiveModel.find({project: "6193bb6995386181efe41bda"});
+        console.log("los objetivos del proyecto son ", objetivos);
+
+    const proyectoConOnjetivos = { ...proyecto, objetivos:objetivos };
+        console.log("proyecto con objetivos es ", proyectoConOnjetivos);
+};
+
+main ();
 
      //generar objetivos
     // const objet = await ObjectiveModel.create({
@@ -30,10 +82,10 @@ const main = async () => {
     //     });
     
     //QUERY func populate (modelo objetivos:many,   usuarios:one)
-    const proyecto = await ProyectoModel.find({ nombre: 'Proyecto 4'  })
-    .populate('lider')
-    .populate('objetivos');    
-        console.log('el proyecto es: ', JSON.stringify(proyecto));
+    // const proyecto = await ProyectoModel.find({ nombre: 'Proyecto 4'  })
+    // .populate('lider')
+    // .populate('objetivos');    
+    //     console.log('el proyecto es: ', JSON.stringify(proyecto));
 
     // referencia debil querys
     // const proyecto = await ProyectoModel.find({ nombre: 'Proyecto 3' }); //modelo base
@@ -101,6 +153,3 @@ const main = async () => {
     //     });
 
     
-};
-
-main ();

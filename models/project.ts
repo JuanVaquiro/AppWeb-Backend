@@ -48,12 +48,6 @@ const projectSchema = new Schema<Proyecto>({
         required: true,
         ref: UserModel,
     },
-    objetivos:[ 
-        {
-         type: Schema.Types.ObjectId,
-         ref: ObjectiveModel,   
-        },
-    ],
 });
 
 export const ProyectoModel = model('Proyecto', projectSchema );
